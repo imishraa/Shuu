@@ -3,29 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <title>Valentine 💖</title>
+
 <style>
+/* Page background */
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
+
+/* Floating hearts */
+.heart {
+    position: absolute;
+    font-size: 22px;
+    opacity: 0.5;
+    animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh); opacity: 0.6; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+/* Card */
+.container {
+    background: white;
+    padding: 40px 50px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    position: relative;
+    z-index: 2;
+}
+
+/* Text */
+h1 {
+    color: #ff3366;
+    margin-bottom: 30px;
+}
+
+/* Buttons */
 button {
     padding: 14px 30px;
     font-size: 20px;
     border-radius: 30px;
     border: none;
     cursor: pointer;
+    margin: 10px;
 }
+
 .yes-button {
-    background: pink;
+    background: linear-gradient(135deg, #ff3366, #ff6f91);
+    color: white;
 }
+
 .no-button {
-    background: lightgray;
+    background: #e0e0e0;
+    position: absolute;
 }
 </style>
 </head>
 
-<body style="text-align:center; margin-top:100px;">
+<body>
 
-<h1>Will you be my Valentine? 💘</h1>
+<!-- Floating hearts -->
+<script>
+for (let i = 0; i < 25; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+    heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+    document.body.appendChild(heart);
+}
+</script>
 
-<button class="yes-button" onclick="handleYesClick()">Yes 💕</button>
-<button class="no-button" onclick="handleNoClick()">No 💔</button>
+<div class="container">
+    <h1>💘 Will you be my Valentine? 💘</h1>
+
+    <button class="yes-button" onclick="handleYesClick()">Yes 💕</button>
+    <button class="no-button">No 💔</button>
+</div>
 
 <script>
 let messageIndex = 0;
@@ -41,14 +105,25 @@ const messages = [
 const noButton = document.querySelector(".no-button");
 const yesButton = document.querySelector(".yes-button");
 
-function handleNoClick() {
+/* Floating / escaping No button */
+noButton.addEventListener("mouseenter", moveNoButton);
+noButton.addEventListener("touchstart", moveNoButton);
+
+function moveNoButton() {
     noButton.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
 
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
+
+    noButton.style.left = x + "px";
+    noButton.style.top = y + "px";
+
+    // Grow Yes button
     const currentSize = parseFloat(
         window.getComputedStyle(yesButton).fontSize
     );
-    yesButton.style.fontSize = `${currentSize * 1.3}px`;
+    yesButton.style.fontSize = `${currentSize * 1.2}px`;
 }
 
 function handleYesClick() {
